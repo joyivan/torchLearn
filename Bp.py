@@ -57,7 +57,7 @@ def update():
 loss = []
 # 训练模型
 for i in range(epochs):
- # 更新权值
+ # 更新权值ijij
     update()
  # 每训练5000次计算一次loss值
     if i %test == 0:
