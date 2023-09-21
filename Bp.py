@@ -1,4 +1,5 @@
 # coding=utf-8
+#lizirong test
 import numpy as np
 import matplotlib.pyplot as plt
 # 输入数据
