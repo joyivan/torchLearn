@@ -56,3 +56,14 @@ class CustomImageDataset(Dataset):
         if self.target_transform:
             label=self.target_transform(label)
         return image,label
+from torch.utils.data import DataLoader
+train_dataloader=DataLoader(train_data,batch_size=64,shuffle=True)
+test_dataloader=DataLoader(test_data,batch_size=64,shuffle=True)
+from torchvision.transform import ToTensor,Lambda
+ds=datasets.FashionMNIST(
+    root="data",
+    train=True,
+    download=True,
+    transform=ToTensor(),
+    target_transform=Lambda(lambda y: torch.zeros(10, dtype=torch.float).scatter_(0, torch.tensor(y), value=1))
+)

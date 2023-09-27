@@ -87,7 +87,6 @@ class OneWay(class1,class2,BaseClass):
         class2.__init__(self,value)
 foo=OneWay(3)
 print(foo.value)
-'''
 
 def func1(func):
     def newfunc():
@@ -110,3 +109,4 @@ def func():
 
 
 func()
+'''
