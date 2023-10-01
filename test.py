@@ -109,4 +109,53 @@ def func():
 
 
 func()
+---
+AllMoney=0
+op=[]
+def SaveMoney(money):
+    global AllMoney
+    AllMoney+=money
+    print('saved money')
+    op.append('saved money')
+def QueryAccount():
+    print(f'You have {AllMoney}')
+    op.append('query account')
+QueryAccount()
+SaveMoney(100)
+QueryAccount()
+print(op)
 '''
+class Person():
+    BirthYear=1982
+    def __init__(self,name,age):
+        self.name=name
+        self.age=age
+    def printed(self):
+        print(f'name is {self.name}')
+        print(f'age is {self.age}')
+p1=Person('joyivan','42')
+p1.printed()
+
+def addNumber(a,b):
+    return a+b
+def decor(fun):
+    def fun1(a,b):
+        print(f'the a is {a},b is {b}')
+        return fun(a,b)
+    return fun1
+
+addNumber=decor(addNumber)
+print(addNumber(3,4))
+def fun3():
+    i=0
+    while True:
+        if i>100:
+            break
+        else:
+            yield i
+            i+=1
+a=fun3()
+print(type(a))
+for i in range(90):
+    print(next(a))
+
