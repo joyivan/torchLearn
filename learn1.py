@@ -3,7 +3,7 @@ from torch.utils.data import Dataset
 from torchvision import datasets
 from torchvision.transforms import ToTensor
 import matplotlib.pyplot as plt
-
+'''
 train_data=datasets.FashionMNIST(root='data',train=True,download=True,\
                                  transform=ToTensor())
 test_data=datasets.FashionMNIST(root='data',train=False,download=True,\
@@ -59,11 +59,96 @@ class CustomImageDataset(Dataset):
 from torch.utils.data import DataLoader
 train_dataloader=DataLoader(train_data,batch_size=64,shuffle=True)
 test_dataloader=DataLoader(test_data,batch_size=64,shuffle=True)
-from torchvision.transform import ToTensor,Lambda
-ds=datasets.FashionMNIST(
+from torchvision.transforms import ToTensor,Lambda
+'''
+
+import os
+import torch
+from torch import nn
+from torch.utils.data import DataLoader
+from torchvision import datasets,transforms
+train_data=datasets.FashionMNIST(
     root="data",
     train=True,
     download=True,
-    transform=ToTensor(),
-    target_transform=Lambda(lambda y: torch.zeros(10, dtype=torch.float).scatter_(0, torch.tensor(y), value=1))
+    transform=ToTensor()
 )
+test_data=datasets.FashionMNIST(
+    root="data",
+    train=False,
+    download=True,
+    transform=ToTensor()
+)
+train_dataloader=DataLoader(train_data,batch_size=64)
+test_dataloader=DataLoader(test_data,batch_size=64)
+
+device='mps' if torch.backends.mps.is_available() else 'cpu'
+print('using {} device'.format(device))
+
+class network(nn.Module):
+    def __init__(self):
+        super(network,self).__init__()
+        self.flatten=nn.Flatten()
+        self.layers=nn.Sequential(
+            nn.Linear(28*28,512),
+            nn.ReLU(),
+            nn.Linear(512,512),
+            nn.ReLU(),
+            nn.Linear(512,10),
+            nn.Softmax(1)
+        )
+    def forward(self,x):
+        x=self.flatten(x)
+        values=self.layers(x)
+        return values
+model=network().to(device)
+learn_rate=1e-3
+batch_size=64
+epochs=50
+loss_fn=nn.CrossEntropyLoss()
+optimizer=torch.optim.SGD(model.parameters(),lr=learn_rate)
+def train_loop(dataloader,model,loss_fn,optimizer):
+
+    size=len(dataloader.dataset)
+    for number,(x,y) in enumerate(dataloader):
+        x=x.to(device)
+        y=y.to(device)
+        y=torch.nn.functional.one_hot(y, num_classes=10)
+        pred=model(x)
+       # print(f'pred:{pred}')
+       # print(y)
+        loss=loss_fn(pred,y.type(torch.float))
+       # print('ok')
+       # print(f'loss:{loss}')
+
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if number % 100==0:
+            loss,current=loss.item(),number*len(x)
+            print(f'loss:{loss:>7f} [{current:>5d}/{size:>5d}]')
+def test_loop(dataloader,model,loss_fn):
+    size=len(dataloader.dataset)
+    num_bater=len(dataloader)
+    test_loss,correct=0,0
+    with torch.no_grad():
+        for x,y in dataloader:
+            x=x.to(device)
+            y=y.to(device)
+            y1 = torch.nn.functional.one_hot(y, num_classes=10)
+            pred=model(x)
+            pred=pred.to(device)
+            test_loss+=loss_fn(pred,y1.type(torch.float)).item()
+           # print(pred.size())
+           # print(y.size())
+
+            correct+=(pred.argmax(1)==y).type(torch.float).sum().item()
+    test_loss/=num_bater
+    correct/=size
+    print(f'Test Error:\n Accuracy:{(100*correct):>0.1f}%,Avg loss:{test_loss:>8f}')
+for t in range(epochs):
+    print(f"Epoch {t+1}\n-------------------------------")
+    train_loop(train_dataloader, model, loss_fn, optimizer)
+    test_loop(test_dataloader, model, loss_fn)
+print("Done!")
