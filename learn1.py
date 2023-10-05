@@ -82,7 +82,7 @@ test_data=datasets.FashionMNIST(
 train_dataloader=DataLoader(train_data,batch_size=64)
 test_dataloader=DataLoader(test_data,batch_size=64)
 
-device='mps' if torch.backends.mps.is_available() else 'cpu'
+device='mps' if torch.backends.mps.is_available() else 'cuda' if torch.cuda.is_available() else 'cpu'
 print('using {} device'.format(device))
 
 class network(nn.Module):
@@ -111,11 +111,17 @@ def train_loop(dataloader,model,loss_fn,optimizer):
 
     size=len(dataloader.dataset)
     for number,(x,y) in enumerate(dataloader):
+        print(x.size())
+       # input()
         x=x.to(device)
         y=y.to(device)
         y=torch.nn.functional.one_hot(y, num_classes=10)
+       # print(y)
+       # input()
+
         pred=model(x)
-       # print(f'pred:{pred}')
+        print(f'pred:{pred}')
+        input()
        # print(y)
         loss=loss_fn(pred,y.type(torch.float))
        # print('ok')

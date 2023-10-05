@@ -124,7 +124,6 @@ QueryAccount()
 SaveMoney(100)
 QueryAccount()
 print(op)
-'''
 class Person():
     BirthYear=1982
     def __init__(self,name,age):
@@ -158,4 +157,21 @@ a=fun3()
 print(type(a))
 for i in range(90):
     print(next(a))
+
+'''
+import numpy as np
+a=np.zeros((3,3,3))
+a[0]=np.array([[1,2,0],[0,1,1],[0,2,2]])
+a[1]=np.array([[0,2,1],[2,1,0],[2,1,0]])
+a[2]=np.array([[1,1,1],[0,1,1],[0,0,1]])
+w=np.zeros((3,3,3))
+b=np.zeros((3,3,3))
+b[0]=np.array([[-1,0,-1],[1,1,-1],[0,0,0]])
+b[1]=np.array([[1,0,0],[0,-1,-1],[-1,1,1]])
+b[2]=np.array([[0,0,1],[0,0,-1],[-1,-1,1]])
+c=np.multiply(a,b)
+print(a[0])
+
+print(c.sum())
+
 
