@@ -1,6 +1,6 @@
 import torch
 sentence=[
-    ['ich mochte einbier P','S i want a beer .', 'i want a beer . E'],
+    ['ich mochte ein bier P','S i want a beer .', 'i want a beer . E'],
     ['ich mochte ein cola P', 'S i want a coke .', 'i want a coke . E']]
 src_vocab = {'P': 0, 'ich': 1, 'mochte': 2, 'ein': 3, 'bier': 4, 'cola': 5}
 src_vocab_size = len(src_vocab)
