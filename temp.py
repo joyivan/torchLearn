@@ -20,3 +20,4 @@ stu1=stu(1,'jack',20)
 stu1.printStu()
 stu1.modyFiled('age',24)
 stu1.printStu()
+#gitee
